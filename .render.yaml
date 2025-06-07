@@ -6,9 +6,10 @@ services:
     buildCommand: |
       npm install
       npx puppeteer install chrome
-      npm run build
     startCommand: npm start
     autoDeploy: true
     envVars:
       - key: PUPPETEER_EXECUTABLE_PATH
-        value: /opt/render/.local-chromium/linux-*/chrome-linux/chrome
+        value: /opt/render/.local-chromium/linux-1220945/chrome-linux/chrome
+      - key: CHROMIUM_ARGS
+        value: "--no-sandbox --disable-setuid-sandbox"
