@@ -309,8 +309,8 @@ curl -X POST --location "http://localhost:21465/api/mySession/send-message" \
     -H "Accept: application/json" \
     -H "Authorization: Bearer \$2b\$10\$8aQFQxnWREtBEMZK_iHMe.u7NeoNkjL7s6NYai_83Pb31Ycss6Igm" \
     -d "{
-          \"phone\": \"5511900000000\",
-          \"message\": \"*Abner* Rodrigues\"
+          \"phone\": \"917486035226\",
+          \"message\": \"Hello from PHP via WPPConnect Server\"
         }"
 ```
 
