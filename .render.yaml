@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: wppconnect-server
+    env: node
+    plan: free
+    buildCommand: |
+      npm install
+      npx puppeteer install chrome
+      npm run build
+    startCommand: npm start
+    autoDeploy: true
+    envVars:
+      - key: PUPPETEER_EXECUTABLE_PATH
+        value: /opt/render/.local-chromium/linux-*/chrome-linux/chrome
