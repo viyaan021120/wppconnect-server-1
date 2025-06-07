@@ -1,9 +1,9 @@
 import { ServerOptions } from './types/ServerOptions';
 
 export default {
-  secretKey: 'THISISMYSECURETOKEN',
-  host: 'http://localhost',
-  port: '21465',
+  secretKey: process.env.SECRET_KEY || 'THISISMYSECURETOKEN',
+  host: process.env.HOST || 'http://localhost',
+  port: process.env.PORT || '21465',
   deviceName: 'WppConnect',
   poweredBy: 'WPPConnect-Server',
   startAllSession: true,
@@ -11,7 +11,7 @@ export default {
   maxListeners: 15,
   customUserDataDir: './userDataDir/',
   webhook: {
-    url: null,
+    url: process.env.WEBHOOK_URL || null,
     autoDownload: true,
     uploadS3: false,
     readMessage: true,
@@ -40,7 +40,7 @@ export default {
     daysToArchive: 45,
   },
   log: {
-    level: 'silly', // Before open a issue, change level to silly and retry a action
+    level: 'silly', // Change to 'silly' for debugging
     logger: ['console', 'file'],
   },
   createOptions: {
@@ -69,14 +69,6 @@ export default {
       '--ignore-ssl-errors',
       '--ignore-certificate-errors-spki-list',
     ],
-    /**
-     * Example of configuring the linkPreview generator
-     * If you set this to 'null', it will use global servers; however, you have the option to define your own server
-     * Clone the repository https://github.com/wppconnect-team/wa-js-api-server and host it on your server with ssl
-     *
-     * Configure the attribute as follows:
-     * linkPreviewApiServers: [ 'https://www.yourserver.com/wa-js-api-server' ]
-     */
     linkPreviewApiServers: null,
   },
   mapper: {
@@ -84,26 +76,26 @@ export default {
     prefix: 'tagone-',
   },
   db: {
-    mongodbDatabase: 'tokens',
-    mongodbCollection: '',
-    mongodbUser: '',
-    mongodbPassword: '',
-    mongodbHost: '',
-    mongoIsRemote: true,
-    mongoURLRemote: '',
-    mongodbPort: 27017,
-    redisHost: 'localhost',
-    redisPort: 6379,
-    redisPassword: '',
-    redisDb: 0,
-    redisPrefix: 'docker',
+    mongodbDatabase: process.env.MONGODB_DATABASE || 'tokens',
+    mongodbCollection: process.env.MONGODB_COLLECTION || '',
+    mongodbUser: process.env.MONGODB_USER || '',
+    mongodbPassword: process.env.MONGODB_PASSWORD || '',
+    mongodbHost: process.env.MONGODB_HOST || '',
+    mongoIsRemote: process.env.MONGO_IS_REMOTE === 'true' || true,
+    mongoURLRemote: process.env.MONGO_URL_REMOTE || '',
+    mongodbPort: parseInt(process.env.MONGODB_PORT || '27017', 10),
+    redisHost: process.env.REDIS_HOST || 'localhost',
+    redisPort: parseInt(process.env.REDIS_PORT || '6379', 10),
+    redisPassword: process.env.REDIS_PASSWORD || '',
+    redisDb: parseInt(process.env.REDIS_DB || '0', 10),
+    redisPrefix: process.env.REDIS_PREFIX || 'docker',
   },
   aws_s3: {
-    region: 'sa-east-1' as any,
-    access_key_id: null,
-    secret_key: null,
-    defaultBucketName: null,
-    endpoint: null,
-    forcePathStyle: null,
+    region: process.env.AWS_S3_REGION || 'sa-east-1',
+    access_key_id: process.env.AWS_ACCESS_KEY_ID || null,
+    secret_key: process.env.AWS_SECRET_KEY || null,
+    defaultBucketName: process.env.AWS_DEFAULT_BUCKET_NAME || null,
+    endpoint: process.env.AWS_ENDPOINT || null,
+    forcePathStyle: process.env.AWS_FORCE_PATH_STYLE === 'true' || null,
   },
 } as unknown as ServerOptions;
