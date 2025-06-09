@@ -195,44 +195,40 @@ export async function showAllSessions(
 }
 
 export async function startSession(req: Request, res: Response): Promise<any> {
-  
-        logger.info(`startSession: ${req}`);
-  /**
-   * #swagger.tags = ["Auth"]
-     #swagger.autoBody=false
-     #swagger.operationId = 'startSession'
-     #swagger.security = [{
-            "bearerAuth": []
-     }]
-     #swagger.parameters["session"] = {
-      schema: 'NERDWHATS_AMERICA'
-     }
-     #swagger.requestBody = {
-      required: true,
-      "@content": {
-        "application/json": {
-          schema: {
-            type: "object",
-            properties: {
-              webhook: { type: "string" },
-              waitQrCode: { type: "boolean" },
-            }
-          },
-          example: {
-            webhook: "",
-            waitQrCode: false,
-          }
-        }
-      }
-     }
-   */
-  const session = req.session;
-  const { waitQrCode = false } = req.body;
+  try {
+    // Log specific parts of the request, e.g., session and body parameters
+    logger.info(`startSession: sessionId: ${req}, waitQrCode: ${req.body.waitQrCode}`);
 
+    const session = req.session;
+    const { waitQrCode = false } = req.body;
 
-  await getSessionState(req, res);
-  await SessionUtil.opendata(req, session, waitQrCode ? res : null);
+    // Call getSessionState to handle the session-related logic
+    await getSessionState(req, res);
+
+    // Call SessionUtil.opendata with the right arguments
+    await SessionUtil.opendata(req, session, waitQrCode ? res : null);
+
+    // Send a success response (you can customize this)
+    res.status(200).json({ message: 'Session started successfully' });
+
+  } catch (error) {
+    // Handle errors gracefully
+    logger.error(`Error starting session: ${error.message}`);
+    res.status(500).json({ message: 'Failed to start session', error: error.message });
+  }
 }
+
+// export async function startSession(req: Request, res: Response): Promise<any> {
+  
+//     logger.info(`startSessionstartSession: ${JSON.stringify(req)}`);
+ 
+//   const session = req.session;
+//   const { waitQrCode = false } = req.body;
+
+
+//   await getSessionState(req, res);
+//   await SessionUtil.opendata(req, session, waitQrCode ? res : null);
+// }
 
 export async function closeSession(req: Request, res: Response): Promise<any> {
   /**

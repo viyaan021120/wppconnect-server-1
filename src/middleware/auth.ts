@@ -30,8 +30,6 @@ const verifyToken = (req: Request, res: Response, next: NextFunction): any => {
   const secureToken = req.serverOptions.secretKey;
 
   const { session } = req.params;
-  logger.info(`verifyTokenverifyTokenverifyToken: ${JSON.stringify(req.params.session)}`);
-  logger.info(`Session ID: ${req.params.session}`);
 
 
   // logger.info(`verifyTokenverifyTokenverifyToken: ${req.params}`);
@@ -51,6 +49,9 @@ const verifyToken = (req: Request, res: Response, next: NextFunction): any => {
         .replace(/-/g, '+');
     } catch (error) {
       try {
+        
+  logger.info(`Session ID: ${req.params.session}`);
+  logger.info(`tokentokentokentoken: ${token}`);
         if (token && token !== '' && token.split(' ').length > 0) {
           const token_value = token.split(' ')[1];
           if (token_value)
