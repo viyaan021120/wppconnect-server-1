@@ -486,7 +486,7 @@ export async function getSessionState(req: Request, res: Response) {
       schema: 'NERDWHATS_AMERICA'
      }
    */
-        logger.info(`getSessionState start: ${req}`);
+        logger.info(`getSessionState start: ${JSON.stringify(req)}`);
   try {
     const { waitQrCode = false } = req.body;
     const client = req.client;
