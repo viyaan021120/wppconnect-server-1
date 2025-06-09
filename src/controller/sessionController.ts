@@ -19,7 +19,11 @@ import fs from 'fs';
 import mime from 'mime-types';
 import QRCode from 'qrcode';
 import { Logger } from 'winston';
+import { createLogger } from '../util/logger';
 
+//require('dotenv').config();
+
+export const logger = createLogger(config.log);
 import { version } from '../../package.json';
 import config from '../config';
 import CreateSessionUtil from '../util/createSessionUtil';
@@ -223,6 +227,8 @@ export async function startSession(req: Request, res: Response): Promise<any> {
   const session = req.session;
   const { waitQrCode = false } = req.body;
 
+        // logger.info("testtttttt");
+        logger.info(`req.body-Server version: ${req.body}`);
   await getSessionState(req, res);
   await SessionUtil.opendata(req, session, waitQrCode ? res : null);
 }
@@ -531,7 +537,10 @@ export async function getQrCode(req: Request, res: Response) {
       const qr = req.client.urlcode
         ? await QRCode.toDataURL(req.client.urlcode, qrOptions)
         : null;
-        console.log("qr------------------",qr);
+        
+            logger.info(`qrrrrrrrrr: ${qr}`);
+        // console.log("qr------------------",qr);
+        
         console.log(await QRCode.toDataURL(req.client.urlcode, qrOptions));
       const img = Buffer.from(
         (qr as any).replace(/^data:image\/(png|jpeg|jpg);base64,/, ''),
