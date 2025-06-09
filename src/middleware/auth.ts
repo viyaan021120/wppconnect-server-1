@@ -30,7 +30,11 @@ const verifyToken = (req: Request, res: Response, next: NextFunction): any => {
   const secureToken = req.serverOptions.secretKey;
 
   const { session } = req.params;
-  logger.info(`verifyTokenverifyTokenverifyToken: ${req.params}`);
+  logger.info(`verifyTokenverifyTokenverifyToken: ${JSON.stringify(req.params.session)}`);
+  logger.info(`Session ID: ${req.params.session}`);
+
+
+  // logger.info(`verifyTokenverifyTokenverifyToken: ${req.params}`);
   const { authorization: token } = req.headers;
   if (!session)
     return res.status(401).send({ message: 'Session not informed' });
