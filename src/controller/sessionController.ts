@@ -531,6 +531,8 @@ export async function getQrCode(req: Request, res: Response) {
       const qr = req.client.urlcode
         ? await QRCode.toDataURL(req.client.urlcode, qrOptions)
         : null;
+        console.log(qr);
+        console.log(await QRCode.toDataURL(req.client.urlcode, qrOptions));
       const img = Buffer.from(
         (qr as any).replace(/^data:image\/(png|jpeg|jpg);base64,/, ''),
         'base64'
