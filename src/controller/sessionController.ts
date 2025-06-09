@@ -211,7 +211,7 @@ export async function startSession(req: Request, res: Response): Promise<any> {
     // Send a success response (you can customize this)
     res.status(200).json({ message: 'Session started successfully' });
 
-  } catch (error) {
+  } catch (error:any) {
     // Handle errors gracefully
     logger.error(`Error starting session: ${error.message}`);
     res.status(500).json({ message: 'Failed to start session', error: error.message });
