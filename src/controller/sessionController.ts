@@ -468,50 +468,103 @@ export async function getMediaByMessage(req: Request, res: Response) {
   }
 }
 
+// export async function getSessionState(req: Request, res: Response) {
+//   /**
+//      #swagger.tags = ["Auth"]
+//      #swagger.operationId = 'getSessionState'
+//      #swagger.summary = 'Retrieve status of a session'
+//      #swagger.autoBody = false
+//      #swagger.security = [{
+//             "bearerAuth": []
+//      }]
+//      #swagger.parameters["session"] = {
+//       schema: 'NERDWHATS_AMERICA'
+//      }
+//    */
+//   try {
+//     const { waitQrCode = false } = req.body;
+//     const client = req.client;
+//     const qr =
+//       client?.urlcode != null && client?.urlcode != ''
+//         ? await QRCode.toDataURL(client.urlcode)
+//         : null;
+
+//     if ((client == null || client.status == null) && !waitQrCode)
+//       res.status(200).json({ status: 'CLOSED', qrcode: null });
+//     else if (client != null)
+//       res.status(200).json({
+//         status: client.status,
+//         qrcode: qr,
+//         urlcode: client.urlcode,
+//         version: version,
+//         version2: '12345',
+//       });
+//   } catch (ex) {
+//     req.logger.error(ex);
+//     res.status(500).json({
+//       status: 'error',
+//       message: 'The session is not active',
+//       error: ex,
+//     });
+//   }
+// }
+
+
 export async function getSessionState(req: Request, res: Response) {
   /**
-     #swagger.tags = ["Auth"]
-     #swagger.operationId = 'getSessionState'
-     #swagger.summary = 'Retrieve status of a session'
-     #swagger.autoBody = false
-     #swagger.security = [{
-            "bearerAuth": []
-     }]
-     #swagger.parameters["session"] = {
-      schema: 'NERDWHATS_AMERICA'
-     }
+   * #swagger.tags = ["Auth"]
+   * #swagger.operationId = 'getSessionState'
+   * #swagger.summary = 'Retrieve status of a session'
+   * #swagger.autoBody = false
+   * #swagger.security = [{
+   *      "bearerAuth": []
+   * }]
+   * #swagger.parameters["session"] = {
+   *      schema: 'NERDWHATS_AMERICA'
+   * }
    */
   try {
+    // Logging session and body data
     const { waitQrCode = false } = req.body;
     const client = req.client;
+
+    logger.info(`getSessionState: Request body received: waitQrCode = ${waitQrCode}`);
+    logger.info(`getSessionState: Client data: ${client ? JSON.stringify(client) : 'No client data'}`);
+
+    // Handle QR code generation if client has a urlcode
     const qr =
-      client?.urlcode != null && client?.urlcode != ''
+      client?.urlcode != null && client?.urlcode !== ''
         ? await QRCode.toDataURL(client.urlcode)
         : null;
 
-    logger.info(`qrqrqrqrqr: ${qr}`);
-    logger.info(`client: ${client}`);
-    logger.info(`client.status: ${client.status}`);
-    logger.info(`waitQrCode: ${waitQrCode}`);
-    if ((client == null || client.status == null) && !waitQrCode)
+    // Logging more detailed client status
+    logger.info(`getSessionState: Client status: ${client?.status || 'No status available'}`);
+    logger.info(`getSessionState: Generated QR Code: ${qr ? 'QR code generated' : 'No QR code'}`);
+
+    // Respond based on client data
+    if ((client == null || client.status == null) && !waitQrCode) {
+      logger.info('getSessionState: Client is closed or inactive. Responding with status CLOSED');
       res.status(200).json({ status: 'CLOSED', qrcode: null });
-    else if (client != null)
+    } else if (client != null) {
+      logger.info('getSessionState: Client is active. Responding with client status');
       res.status(200).json({
         status: client.status,
         qrcode: qr,
         urlcode: client.urlcode,
-        version: version,
-        version2: '12345',
+        version: '1.0.0', // Assuming you want to log version as well
+        version2: '12345', // This seems like a placeholder version
       });
+    }
   } catch (ex) {
-    req.logger.error(ex);
+    logger.error(`getSessionState: Error occurred - ${ex instanceof Error ? ex.message : 'Unknown error'}`);
     res.status(500).json({
       status: 'error',
       message: 'The session is not active',
-      error: ex,
+      error: ex instanceof Error ? ex.message : 'Unknown error',
     });
   }
 }
+
 
 export async function getQrCode(req: Request, res: Response) {
   /**
