@@ -228,7 +228,8 @@ export async function startSession(req: Request, res: Response): Promise<any> {
   const { waitQrCode = false } = req.body;
 
         // logger.info("testtttttt");
-        logger.info(`req.body-Server version: ${req.body}`);
+        logger.info(`req.body - Server version: ${JSON.stringify(req.body)}`);
+
   await getSessionState(req, res);
   await SessionUtil.opendata(req, session, waitQrCode ? res : null);
 }
@@ -485,6 +486,7 @@ export async function getSessionState(req: Request, res: Response) {
       schema: 'NERDWHATS_AMERICA'
      }
    */
+        logger.info(`getSessionState start: ${req}`);
   try {
     const { waitQrCode = false } = req.body;
     const client = req.client;
@@ -493,6 +495,7 @@ export async function getSessionState(req: Request, res: Response) {
         ? await QRCode.toDataURL(client.urlcode)
         : null;
 
+        logger.info(`qrrrrrrrrrrrrrrrrrrrrr error: ${qr}`);
     if ((client == null || client.status == null) && !waitQrCode)
       res.status(200).json({ status: 'CLOSED', qrcode: null });
     else if (client != null)
@@ -503,6 +506,7 @@ export async function getSessionState(req: Request, res: Response) {
         version: version,
       });
   } catch (ex) {
+        logger.info(`getSessionState error: ${ex}`);
     req.logger.error(ex);
     res.status(500).json({
       status: 'error',
