@@ -18,10 +18,6 @@ import { NextFunction, Request, Response } from 'express';
 
 import { clientsArray } from '../util/sessionUtil';
 
-import config from '../config';
-import { createLogger } from '../util/logger';
-export const logger = createLogger(config.log);
-
 function formatSession(session: string) {
   return session.split(':')[0];
 }
@@ -30,9 +26,6 @@ const verifyToken = (req: Request, res: Response, next: NextFunction): any => {
   const secureToken = req.serverOptions.secretKey;
 
   const { session } = req.params;
-
-
-  // logger.info(`verifyTokenverifyTokenverifyToken: ${req.params}`);
   const { authorization: token } = req.headers;
   if (!session)
     return res.status(401).send({ message: 'Session not informed' });
@@ -49,9 +42,6 @@ const verifyToken = (req: Request, res: Response, next: NextFunction): any => {
         .replace(/-/g, '+');
     } catch (error) {
       try {
-        
-  logger.info(`Session ID: ${req.params.session}`);
-  logger.info(`tokentokentokentoken: ${token}`);
         if (token && token !== '' && token.split(' ').length > 0) {
           const token_value = token.split(' ')[1];
           if (token_value)

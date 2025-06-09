@@ -19,11 +19,7 @@ import fs from 'fs';
 import mime from 'mime-types';
 import QRCode from 'qrcode';
 import { Logger } from 'winston';
-import { createLogger } from '../util/logger';
 
-//require('dotenv').config();
-
-export const logger = createLogger(config.log);
 import { version } from '../../package.json';
 import config from '../config';
 import CreateSessionUtil from '../util/createSessionUtil';
@@ -194,34 +190,38 @@ export async function showAllSessions(
   res.status(200).json({ response: await getAllTokens(req) });
 }
 
-// export async function startSession(req: Request, res: Response): Promise<any> {
-//   try {
-
-//     const session = req.session;
-//     const { waitQrCode = false } = req.body;
-
-//     // Call getSessionState to handle the session-related logic
-//     await getSessionState(req, res);
-
-//     // Call SessionUtil.opendata with the right arguments
-//     await SessionUtil.opendata(req, session, waitQrCode ? res : null);
-
-//     // Send a success response (you can customize this)
-//     res.status(200).json({ message: 'Session started successfully' });
-
-//   } catch (error:any) { 
-//     logger.error(`Error starting session: ${error.message}`);
-//     res.status(500).json({ message: 'Failed to start session', error: error.message });
-//   }
-// }
-
 export async function startSession(req: Request, res: Response): Promise<any> {
-  
-    logger.info(`startSessionstartSession: ${JSON.stringify(req)}`);
- 
+  /**
+   * #swagger.tags = ["Auth"]
+     #swagger.autoBody=false
+     #swagger.operationId = 'startSession'
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              webhook: { type: "string" },
+              waitQrCode: { type: "boolean" },
+            }
+          },
+          example: {
+            webhook: "",
+            waitQrCode: false,
+          }
+        }
+      }
+     }
+   */
   const session = req.session;
   const { waitQrCode = false } = req.body;
-
 
   await getSessionState(req, res);
   await SessionUtil.opendata(req, session, waitQrCode ? res : null);
@@ -479,7 +479,6 @@ export async function getSessionState(req: Request, res: Response) {
       schema: 'NERDWHATS_AMERICA'
      }
    */
-        logger.info(`getSessionState start: ${JSON.stringify(req)}`);
   try {
     const { waitQrCode = false } = req.body;
     const client = req.client;
@@ -488,7 +487,6 @@ export async function getSessionState(req: Request, res: Response) {
         ? await QRCode.toDataURL(client.urlcode)
         : null;
 
-        logger.info(`qrrrrrrrrrrrrrrrrrrrrr error: ${qr}`);
     if ((client == null || client.status == null) && !waitQrCode)
       res.status(200).json({ status: 'CLOSED', qrcode: null });
     else if (client != null)
@@ -499,7 +497,6 @@ export async function getSessionState(req: Request, res: Response) {
         version: version,
       });
   } catch (ex) {
-        logger.info(`getSessionState error: ${ex}`);
     req.logger.error(ex);
     res.status(500).json({
       status: 'error',
@@ -534,11 +531,6 @@ export async function getQrCode(req: Request, res: Response) {
       const qr = req.client.urlcode
         ? await QRCode.toDataURL(req.client.urlcode, qrOptions)
         : null;
-        
-            logger.info(`qrrrrrrrrr: ${qr}`);
-        // console.log("qr------------------",qr);
-        
-        console.log(await QRCode.toDataURL(req.client.urlcode, qrOptions));
       const img = Buffer.from(
         (qr as any).replace(/^data:image\/(png|jpeg|jpg);base64,/, ''),
         'base64'
