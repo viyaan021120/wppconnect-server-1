@@ -195,6 +195,8 @@ export async function showAllSessions(
 }
 
 export async function startSession(req: Request, res: Response): Promise<any> {
+  
+        logger.info(`startSession: ${req}`);
   /**
    * #swagger.tags = ["Auth"]
      #swagger.autoBody=false
@@ -227,8 +229,6 @@ export async function startSession(req: Request, res: Response): Promise<any> {
   const session = req.session;
   const { waitQrCode = false } = req.body;
 
-        // logger.info("testtttttt");
-        logger.info(`req.body - Server version: ${JSON.stringify(req.body)}`);
 
   await getSessionState(req, res);
   await SessionUtil.opendata(req, session, waitQrCode ? res : null);

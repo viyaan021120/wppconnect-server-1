@@ -18,6 +18,10 @@ import { NextFunction, Request, Response } from 'express';
 
 import { clientsArray } from '../util/sessionUtil';
 
+import config from '../config';
+import { createLogger } from '../util/logger';
+export const logger = createLogger(config.log);
+
 function formatSession(session: string) {
   return session.split(':')[0];
 }
@@ -26,6 +30,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction): any => {
   const secureToken = req.serverOptions.secretKey;
 
   const { session } = req.params;
+  logger.info(`verifyTokenverifyTokenverifyToken: ${req.params}`);
   const { authorization: token } = req.headers;
   if (!session)
     return res.status(401).send({ message: 'Session not informed' });
