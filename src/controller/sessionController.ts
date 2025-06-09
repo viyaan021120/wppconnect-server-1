@@ -27,6 +27,8 @@ import { callWebHook, contactToArray } from '../util/functions';
 import getAllTokens from '../util/getAllTokens';
 import { clientsArray, deleteSessionOnArray } from '../util/sessionUtil';
 
+import { createLogger } from '../util/logger';
+export const logger = createLogger(config.log);
 const SessionUtil = new CreateSessionUtil();
 
 async function downloadFileFunction(
@@ -487,6 +489,10 @@ export async function getSessionState(req: Request, res: Response) {
         ? await QRCode.toDataURL(client.urlcode)
         : null;
 
+    logger.info(`qrqrqrqrqr: ${qr}`);
+    logger.info(`client: ${client}`);
+    logger.info(`client.status: ${client.status}`);
+    logger.info(`waitQrCode: ${waitQrCode}`);
     if ((client == null || client.status == null) && !waitQrCode)
       res.status(200).json({ status: 'CLOSED', qrcode: null });
     else if (client != null)
@@ -495,6 +501,7 @@ export async function getSessionState(req: Request, res: Response) {
         qrcode: qr,
         urlcode: client.urlcode,
         version: version,
+        version2: '12345',
       });
   } catch (ex) {
     req.logger.error(ex);
