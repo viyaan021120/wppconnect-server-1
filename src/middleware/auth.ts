@@ -16,9 +16,13 @@
 import bcrypt from 'bcrypt';
 import { NextFunction, Request, Response } from 'express';
 
+import { createLogger } from '../util/logger';
+import config from '../config';
+export const logger = createLogger(config.log);
 import { clientsArray } from '../util/sessionUtil';
 
 function formatSession(session: string) {
+  logger.info(`formatSession= ${session}`);
   return session.split(':')[0];
 }
 
@@ -72,6 +76,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction): any => {
           req.session = formatSession(req.params.session);
           req.token = tokenDecrypt;
           req.client = clientsArray[req.session];
+  logger.info(`testtest= ${req.client}`);
           next();
         } else {
           return res
