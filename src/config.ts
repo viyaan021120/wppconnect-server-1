@@ -2,10 +2,10 @@ import { ServerOptions } from './types/ServerOptions';
 
 export default {
   secretKey: process.env.SECRET_KEY || 'THISISMYSECURETOKEN',
-  host: process.env.HOST || 'https://wppconnect-server-jk9h.onrender.com',
-  // host: process.env.HOST || 'http://localhost',
+  // host: process.env.HOST || 'https://wppconnect-server-jk9h.onrender.com',
+  host: process.env.HOST || 'http://localhost',
+  // port: process.env.PORT || '10000',
   port: process.env.PORT || '10000',
-  // port: process.env.PORT || '21465',
   deviceName: 'WppConnect',
   poweredBy: 'WPPConnect-Server',
   startAllSession: true,

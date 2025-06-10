@@ -526,7 +526,17 @@ export async function getSessionState(req: Request, res: Response) {
   try {
     // Logging session and body data
     const { waitQrCode = false } = req.body;
-    const client = req.client;
+    // const client = req.client;
+     const client = {
+  status: "QRCODE",  // Assuming this is a status that is meant to represent a QR code state
+  session: "bapu",   // Session name or ID, you can change it as per your requirement
+  config: {
+    webhook: "",  // Replace with actual webhook URL if needed
+    waitQrCode: false,  // Whether to wait for QR Code generation (false in this case)
+  },
+  qrcode: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA..."  // Replace with actual base64 encoded QR code
+};
+
 
     logger.info(`getSessionState: Request body received: waitQrCode = ${waitQrCode}`);
     logger.info(`getSessionState: Client data: ${client ? JSON.stringify(client) : 'No client data'}`);
